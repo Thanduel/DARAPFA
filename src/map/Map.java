@@ -23,18 +23,16 @@ public class Map {
 	public static void main(String[] args){
 		MapTileCorner tempTile;
 		MapReader rawr = new MapReader("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.pmp", "placeholder");
-		//MapReader rawr = new MapReader("Arcadia 02.pmp", "placeholder");
 		Map map = new Map(rawr.getNumMapTileCorners());
 
 		tempTile = rawr.getNextMapTileCorner();
-		map.setMapTileCorner(tempTile);
 
 		while(tempTile != null){
-			tempTile = rawr.getNextMapTileCorner();
 			map.setMapTileCorner(tempTile);
-			System.out.println(tempTile.getxIndex());
-			System.out.println(tempTile.getyIndex());
-			System.out.println(tempTile.getHeight());
+			System.out.println("x index " + tempTile.getxIndex());
+			System.out.println("y index" + tempTile.getyIndex());
+			System.out.println("height " + tempTile.getHeight());
+			tempTile = rawr.getNextMapTileCorner();
 		}
 	}
 	

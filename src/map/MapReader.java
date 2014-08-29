@@ -96,7 +96,7 @@ public class MapReader {
 		int oldIndex = xIndex;
 		xIndex++;
 
-		if(xIndex == mapSize + 1)
+		if(xIndex == (mapSize * 16) + 1)
 			xIndex = 0;
 
 		return oldIndex; 
@@ -104,10 +104,9 @@ public class MapReader {
 
 	private int nextYIndex(){
 		int oldIndex = yIndex;
-		yIndex++;
 
-		if(yIndex == mapSize + 1)
-			yIndex = 0;
+		if(xIndex == 0)
+			yIndex++;
 
 		return oldIndex; 
 	}
