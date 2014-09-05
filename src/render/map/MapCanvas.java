@@ -16,6 +16,8 @@ public class MapCanvas extends JLabel {
 		
 		this.map = map;
 		this.camera = camera;
+		
+		// this.setDoubleBuffered(true);
 	}
 	
 	public void paint(Graphics g)	{

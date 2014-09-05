@@ -1,12 +1,19 @@
 package render.map;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import map.Obstruction;
+
 public class MapStub {
 	public float [][] heights;
 	public float tileWidth;
+	public List<Obstruction> obstructions;
 	
 	public MapStub(int width, int height, float tileWidth)	{
 		heights = new float[width][height];
 		this.tileWidth = tileWidth;
+		obstructions = new LinkedList<Obstruction>();
 	}
 	
 	public float getHeight()	{
@@ -36,6 +43,14 @@ public class MapStub {
 			);
 		}
 		return null;
+	}
+	
+	public void addObstruction(Obstruction o)	{
+		obstructions.add(o);
+	}
+	
+	public List<Obstruction> getPotentialObstructions(float x, float y, float width, float height)	{
+		return obstructions;
 	}
 	
 	public static MapStub generateRandomMap(int width, int height, float tileWidth, float maxHeight)	{

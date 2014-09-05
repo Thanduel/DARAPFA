@@ -7,14 +7,17 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.util.List;
+
+import map.Obstruction;
 
 // QUESTION: Should the maxHeight change with the camera height?
 // ANSWER: Not sure, but the camera should definitely hold the maxHeight
-
 public class MapRenderer implements Paint {
 	/* The map is used to determine the tile corners, the heights of which
 	 * are used to render the landscape. The map also stores the base value
@@ -86,6 +89,7 @@ public class MapRenderer implements Paint {
 		 */
 		@Override
 		public Raster getRaster(int startX, int startY, int tileWidth, int tileHeight)	{
+			List<Obstruction> potentialObstructions = map.getPotentialObstructions(startX + camera.position.x, startY + camera.position.y, tileWidth, tileHeight);
 			WritableRaster raster = getColorModel().createCompatibleWritableRaster(tileWidth, tileHeight);
 			int [] pixelData = new int[tileWidth * tileHeight * 4];
 			for(int y = 0; y < tileHeight; y++)	{
@@ -94,23 +98,37 @@ public class MapRenderer implements Paint {
 					float posX = startX + x + camera.position.x,
 						  posY = startY + y + camera.position.y;
 					
-					MapStub.HeightQuad heights = map.getHeightsForPoint(posX, posY);
+					// the colours we'll eventually render this pixel with
 					int r = 0, g = 0, b = 0, a = 0;
 					
-					if(heights != null)	{
-						// we need to find fractionX and fractionY
-						float fractionX = ((posX) % map.tileWidth)/map.tileWidth,
-							  fractionY = ((posY) % map.tileWidth)/map.tileWidth;
-						
-						// if the fractions fit in the ranges, interpolate for color
-						// otherwise the pixel is completely transparent
-						if(0 <= fractionX && fractionX <= 1 && 0 <= fractionY && fractionY <= 1)	{
-							Color c = getColorFromHeight(bilinearInterpolateHeight(heights, fractionX, fractionY));
-							r = c.getRed();
-							g = c.getGreen();
-							b = c.getBlue();
-							a = c.getAlpha();
+					Obstruction ob = null;
+					for(Obstruction o: potentialObstructions)
+						if(o.getShape().contains(new Point2D.Float(posX, posY)))	{
+							ob = o;
+							break;
 						}
+					
+					if(ob == null)	{
+						MapStub.HeightQuad heights = map.getHeightsForPoint(posX, posY);
+						if(heights != null)	{
+							// we need to find fractionX and fractionY
+							float fractionX = ((posX) % map.tileWidth)/map.tileWidth,
+								  fractionY = ((posY) % map.tileWidth)/map.tileWidth;
+							
+							// if the fractions fit in the ranges, interpolate for color
+							// otherwise the pixel is completely transparent
+							if(0 <= fractionX && fractionX <= 1 && 0 <= fractionY && fractionY <= 1)	{
+								Color c = getColorFromHeight(bilinearInterpolateHeight(heights, fractionX, fractionY));
+								r = c.getRed();
+								g = c.getGreen();
+								b = c.getBlue();
+								a = c.getAlpha();
+							}
+						}
+					}
+					else	{
+						r = 255;
+						a = 255;
 					}
 					
 					// now fill in the values in pixelData
