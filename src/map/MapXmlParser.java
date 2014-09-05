@@ -1,3 +1,6 @@
+package map;
+
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,10 +20,10 @@ public class MapXmlParser {
 	//No generics
 	List myEmpls;
 	Document dom;
-  private String map_xml_path;
+	private String map_xml_path;
 
 
-	public DomParserExample(String map_xml_path){
+	public MapXmlParser(String map_xml_path){
     this.map_xml_path = map_xml_path;
 		//create a list to hold the employee objects
     //
@@ -32,7 +35,7 @@ public class MapXmlParser {
 		//parse the xml file and get the dom object
 		parseXmlFile();
 
-		//get each employee element and create a Employee object
+		//get each entity element and create a Entity object
 		parseDocument();
 
 		//Iterate through the list and print the data
@@ -51,6 +54,7 @@ public class MapXmlParser {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
+			System.out.println(map_xml_path);
 			dom = db.parse(map_xml_path);
 
 
@@ -77,7 +81,7 @@ public class MapXmlParser {
 				Element el = (Element)nl.item(i);
 
 				//get the Employee object
-				Employee e = getEmployee(el);
+				Entity e = getEntity(el);
 
 				//add it to list
 				myEmpls.add(e);
@@ -96,19 +100,17 @@ public class MapXmlParser {
 
 		//for each <employee> element get text or int values of
 		//name ,id, age and name
-    int uid = getIntValue(empE1, "Entity");
-		String template_path = getTextValue(empEl,"Template");
-		float x = getFloatValue(empEl,"x");
-		float y = getFloatValue(empEl,"y");
+		String templatePath = getTextValue(empEl,"Template");
+		//int uid = getIntValue(empEl, "Entity");
 		float theta = getFloatValue(empEl,"Orientation");
-
-		String type = empEl.getAttribute("type");
+		Point2D.Float position = getPoint2DFloat(empEl, "Position");
 
 		//Create a new Employee with the value read from the xml nodes
-		Entity e = new Entity(uid, x, y, theta, template_path);
+		Entity e = new Entity(0, position.x, position.y, theta, templatePath);
 
 		return e;
 	}
+	
 
 
 	/**
@@ -125,12 +127,26 @@ public class MapXmlParser {
 		String textVal = null;
 		NodeList nl = ele.getElementsByTagName(tagName);
 
-		if(nl != null && nl.getLength() > 0) {
+		if(nl != null && nl.getLength() > 0) 
+		{
 			Element el = (Element)nl.item(0);
-			textVal = el.getFirstChild().getNodeValue();
+			if(tagName.equals("Orientation"))
+				textVal = getOrientation(el);
+			else
+				textVal = el.getFirstChild().getNodeValue();
 		}
 
-    System.out.println(textVal);
+		System.out.println(textVal);
+		return textVal;
+	}
+	
+	
+	private String getOrientation(Element ele) {
+
+		String textVal = null;
+
+		textVal = ele.getAttribute("y");
+		System.out.println(textVal);
 		return textVal;
 	}
 
@@ -151,13 +167,36 @@ public class MapXmlParser {
 		return Float.parseFloat(getTextValue(ele,tagName));
 	}
 
+	private Point2D.Float getPoint2DFloat(Element ele, String tagName) {
+		//in production application you would catch the exception
+		if(tagName.equals("Position")){
+
+			NodeList nl = ele.getElementsByTagName("Position");
+
+			if(nl != null && nl.getLength() > 0) 
+			{
+				String x, y;
+				Element el = (Element)nl.item(0);
+				x = el.getAttribute("x");
+				y = el.getAttribute("z");
+				System.out.println(x);
+				System.out.println(y);
+
+				return new Point2D.Float(Float.parseFloat(x), Float.parseFloat(y));
+			}
+			else
+				return null;
+		}
+		else
+			return null;
+	}
 	/**
 	 * Iterate through the list and print the
 	 * content to console
 	 */
 	private void printData(){
 
-		System.out.println("No of Employees '" + myEmpls.size() + "'.");
+		System.out.println("No of Entity '" + myEmpls.size() + "'.");
 
 		Iterator it = myEmpls.iterator();
 		while(it.hasNext()) {
@@ -168,7 +207,7 @@ public class MapXmlParser {
 
 	public static void main(String[] args){
 		//create an instance
-		MapXmlParser dpe = new MapXmlParser("C:/User/FNB/git/0ad/0ad/data/mods/public/maps/scenarios/Arcadia 02.xml");
+		MapXmlParser dpe = new MapXmlParser("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
 
 		//call run example
 		dpe.runExample();

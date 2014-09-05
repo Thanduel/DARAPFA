@@ -14,6 +14,15 @@ public class Entity {
 		this.theta = theta;
 		this.template_path = template_path;
   }
+  
+  public void PrintEntity()
+  {
+	  System.out.println("Entity: " + this.x + " " + this.y + " " + this.theta + " ");
+  }
+  
+  public String toString(){
+	  return new String("Entity: " + this.x + " " + this.y + " " + this.theta + " ");
+  }
 
 public int getUid() {
 	return uid;
