@@ -36,7 +36,7 @@ public class MapXmlParser {
 		parseXmlFile();
 
 		//get each entity element and create a Entity object
-		parseDocument();
+		parseDocument("Entity");
 
 		//Iterate through the list and print the data
 		printData();
@@ -66,14 +66,37 @@ public class MapXmlParser {
 			ioe.printStackTrace();
 		}
 	}
+	
+	private NodeList getElementList(String tag){
+		Element docEle = dom.getDocumentElement();
 
+		//get a nodelist of <employee> elements
+		return docEle.getElementsByTagName(tag);
+	}
 
-	private void parseDocument(){
+	private void parseElementListForEntities(NodeList elementList){
+		//get the root elememt
+		if(elementList != null && elementList.getLength() > 0) {
+			for(int i = 0 ; i < elementList.getLength();i++) {
+
+				//get the employee element
+				Element el = (Element)elementList.item(i);
+
+				//get the Employee object
+				Entity e = getEntity(el);
+
+				//add it to list
+				myEmpls.add(e);
+			}
+		}
+	}
+
+	private void parseDocument(String tag){
 		//get the root elememt
 		Element docEle = dom.getDocumentElement();
 
 		//get a nodelist of <employee> elements
-		NodeList nl = docEle.getElementsByTagName("Entity");
+		NodeList nl = docEle.getElementsByTagName(tag);
 		if(nl != null && nl.getLength() > 0) {
 			for(int i = 0 ; i < nl.getLength();i++) {
 
@@ -87,6 +110,24 @@ public class MapXmlParser {
 				myEmpls.add(e);
 			}
 		}
+	}
+	
+	public NodeList extractElementList(String elementTag){
+		parseXmlFile();
+		return getElementList(elementTag);
+	}
+	
+	public float getFloatAttribute(String attributeName, Element ele){
+		
+		String textVal = null;
+
+		textVal = ele.getAttribute(attributeName);
+		System.out.println(textVal);
+		return Float.parseFloat(textVal);
+	}
+	
+	public NodeList getTagInElement(Element element, String tagName){
+		return element.getElementsByTagName(tagName);
 	}
 
 
