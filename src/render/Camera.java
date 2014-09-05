@@ -1,4 +1,4 @@
-package render.map;
+package render;
 
 import java.awt.geom.Point2D;
 

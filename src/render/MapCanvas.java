@@ -1,4 +1,4 @@
-package render.map;
+package render;
 
 import java.awt.Color;
 import java.awt.Graphics;

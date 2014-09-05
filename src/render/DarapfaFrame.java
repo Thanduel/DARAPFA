@@ -11,9 +11,6 @@ import javax.swing.Timer;
 
 import map.CircleObstruction;
 import map.SquareObstruction;
-import render.map.Camera;
-import render.map.MapCanvas;
-import render.map.MapStub;
 
 public class DarapfaFrame extends JFrame implements KeyListener, ActionListener {
 	public static int RENDER_DELAY = 20; // ± 1000/60 -> 60 frames a second
