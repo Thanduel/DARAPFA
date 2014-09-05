@@ -203,11 +203,16 @@ public class MapXmlParser {
 			System.out.println(it.next().toString());
 		}
 	}
+	
+	
+	
+	
 
 
 	public static void main(String[] args){
 		//create an instance
-		MapXmlParser dpe = new MapXmlParser("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
+		//MapXmlParser dpe = new MapXmlParser("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
+		MapXmlParser dpe = new MapXmlParser("../0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
 
 		//call run example
 		dpe.runExample();
