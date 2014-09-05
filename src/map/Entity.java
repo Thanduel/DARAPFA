@@ -63,4 +63,13 @@ public String getTemplate_path() {
 public void setTemplate_path(String template_path) {
 	this.template_path = template_path;
 }
+
+	public String getPathFromTemplatePath(){
+
+		String[] stringArray = this.template_path.split("|");
+		if(stringArray[0].equals("actor"))
+				return new String("../0ad/0ad/binaries/data/mods/public/simulation/templates/");
+		else
+			return null;
+	}
 }
