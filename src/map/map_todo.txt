@@ -1,0 +1,4 @@
+1. cleanup MapXmlParser to act as a library for parsing XML
+2. move functionality in MapXmlParser specific to parsing entities to an entity parsing class
+3. Finish template xml parsing class
+4. Write a controller class that creates a list of entities and turns it into a list of obstacles to pass to the renderer by parsing the templates of the entities.
