@@ -45,10 +45,11 @@ public class TemplateXmlParser  {
 			obs_length = templateXmlParser.getFloatAttribute("width", (Element)static_list.item(0));
 			obs_width = templateXmlParser.getFloatAttribute("depth", (Element)static_list.item(0));
 		}
-		//else
-		//{
+		else
+		{
+			static_list = templateXmlParser.getTagInElement( (Element)entity_list.item(0), "Unit");
 			obs_radius = templateXmlParser.getFloatAttribute("radius", (Element)static_list.item(0));
-		//}
+		}
 	}
 	
 	private void extractObstruction(){
@@ -68,19 +69,19 @@ public class TemplateXmlParser  {
 	}
 	
 	public float getObstructionRadius(){
-		return radius;
+		return obs_radius;
 	}
 	
 	public float getObstructionLength(){
-		return length;
+		return obs_length;
 	}
 	
 	public float getObstructionWidth(){
-		return width;
+		return obs_width;
 	}
 	
 	public Point2D.Float getObstructionLocation(){
 		return location;
 	}
-
+	
 }

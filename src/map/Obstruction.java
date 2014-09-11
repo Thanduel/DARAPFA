@@ -15,10 +15,10 @@ public abstract class Obstruction {
 				return new SquareObstruction(location.x,
 										location.y,
 										txmlp.getObstructionWidth(),
-										txmlp.getObstructionHeight(),
+										txmlp.getObstructionLength(),
 										e.getTheta());
 			}
-			else if(txmlp.isCircle())	{
+			else if(txmlp.isCircular())	{
 				return new CircleObstruction(location.x,
 											location.y,
 											txmlp.getObstructionRadius());
