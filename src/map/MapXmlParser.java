@@ -18,31 +18,16 @@ import org.xml.sax.SAXException;
 public class MapXmlParser {
 
 	//No generics
-	List myEmpls;
 	Document dom;
 	private String map_xml_path;
 
 
 	public MapXmlParser(String map_xml_path){
-    this.map_xml_path = map_xml_path;
-		//create a list to hold the employee objects
-    //
-		myEmpls = new ArrayList();
-	}
+		
+		this.map_xml_path = map_xml_path;
 
-	public void runExample() {
-
-		//parse the xml file and get the dom object
 		parseXmlFile();
-
-		//get each entity element and create a Entity object
-		parseDocument("Entity");
-
-		//Iterate through the list and print the data
-		printData();
-
 	}
-
 
 	private void parseXmlFile(){
 		//get the factory
@@ -54,7 +39,6 @@ public class MapXmlParser {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			System.out.println(map_xml_path);
 			dom = db.parse(map_xml_path);
 
 
@@ -67,53 +51,16 @@ public class MapXmlParser {
 		}
 	}
 	
-	private NodeList getElementList(String tag){
+	public NodeList getElementList(String tag){
 		Element docEle = dom.getDocumentElement();
 
 		//get a nodelist of <employee> elements
+		//docEle.
 		return docEle.getElementsByTagName(tag);
 	}
 
-	private void parseElementListForEntities(NodeList elementList){
-		//get the root elememt
-		if(elementList != null && elementList.getLength() > 0) {
-			for(int i = 0 ; i < elementList.getLength();i++) {
-
-				//get the employee element
-				Element el = (Element)elementList.item(i);
-
-				//get the Employee object
-				Entity e = getEntity(el);
-
-				//add it to list
-				myEmpls.add(e);
-			}
-		}
-	}
-
-	private void parseDocument(String tag){
-		//get the root elememt
-		Element docEle = dom.getDocumentElement();
-
-		//get a nodelist of <employee> elements
-		NodeList nl = docEle.getElementsByTagName(tag);
-		if(nl != null && nl.getLength() > 0) {
-			for(int i = 0 ; i < nl.getLength();i++) {
-
-				//get the employee element
-				Element el = (Element)nl.item(i);
-
-				//get the Employee object
-				Entity e = getEntity(el);
-
-				//add it to list
-				myEmpls.add(e);
-			}
-		}
-	}
-	
 	public NodeList extractElementList(String elementTag){
-		parseXmlFile();
+		//parseXmlFile();
 		return getElementList(elementTag);
 	}
 	
@@ -132,29 +79,6 @@ public class MapXmlParser {
 
 
 	/**
-	 * I take an employee element and read the values in, create
-	 * an Employee object and return it
-	 * @param empEl
-	 * @return
-	 */
-	private Entity getEntity(Element empEl) {
-
-		//for each <employee> element get text or int values of
-		//name ,id, age and name
-		String templatePath = getTextValue(empEl,"Template");
-		//int uid = getIntValue(empEl, "Entity");
-		float theta = getFloatValue(empEl,"Orientation");
-		Point2D.Float position = getPoint2DFloat(empEl, "Position");
-
-		//Create a new Employee with the value read from the xml nodes
-		Entity e = new Entity(0, position.x, position.y, theta, templatePath);
-
-		return e;
-	}
-	
-
-
-	/**
 	 * I take a xml element and the tag name, look for the tag and get
 	 * the text content
 	 * i.e for <employee><name>John</name></employee> xml snippet if
@@ -163,7 +87,9 @@ public class MapXmlParser {
 	 * @param tagName
 	 * @return
 	 */
-	private String getTextValue(Element ele, String tagName) {
+	
+	//this knows to much about entities
+	public String getTextValue(Element ele, String tagName) {
 
 		String textVal = null;
 		NodeList nl = ele.getElementsByTagName(tagName);
@@ -177,17 +103,16 @@ public class MapXmlParser {
 				textVal = el.getFirstChild().getNodeValue();
 		}
 
-		System.out.println(textVal);
 		return textVal;
 	}
 	
 	
+	//this is shouldn't be here
 	private String getOrientation(Element ele) {
 
 		String textVal = null;
 
 		textVal = ele.getAttribute("y");
-		System.out.println(textVal);
 		return textVal;
 	}
 
@@ -198,65 +123,20 @@ public class MapXmlParser {
 	 * @param tagName
 	 * @return
 	 */
-	private int getIntValue(Element ele, String tagName) {
+	public int getIntValue(Element ele, String tagName) {
 		//in production application you would catch the exception
 		return Integer.parseInt(getTextValue(ele,tagName));
 	}
 
-	private float getFloatValue(Element ele, String tagName) {
+	public float getFloatValue(Element ele, String tagName) {
 		//in production application you would catch the exception
 		return Float.parseFloat(getTextValue(ele,tagName));
 	}
-
-	private Point2D.Float getPoint2DFloat(Element ele, String tagName) {
-		//in production application you would catch the exception
-		if(tagName.equals("Position")){
-
-			NodeList nl = ele.getElementsByTagName("Position");
-
-			if(nl != null && nl.getLength() > 0) 
-			{
-				String x, y;
-				Element el = (Element)nl.item(0);
-				x = el.getAttribute("x");
-				y = el.getAttribute("z");
-				System.out.println(x);
-				System.out.println(y);
-
-				return new Point2D.Float(Float.parseFloat(x), Float.parseFloat(y));
-			}
-			else
-				return null;
-		}
-		else
-			return null;
-	}
-	/**
-	 * Iterate through the list and print the
-	 * content to console
-	 */
-	private void printData(){
-
-		System.out.println("No of Entity '" + myEmpls.size() + "'.");
-
-		Iterator it = myEmpls.iterator();
-		while(it.hasNext()) {
-			System.out.println(it.next().toString());
-		}
-	}
-	
-	
-	
-	
-
 
 	public static void main(String[] args){
 		//create an instance
 		//MapXmlParser dpe = new MapXmlParser("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
 		MapXmlParser dpe = new MapXmlParser("../0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.xml");
-
-		//call run example
-		dpe.runExample();
 	}
 
 }

@@ -66,11 +66,13 @@ public void setTemplate_path(String template_path) {
 
 	public String getPathFromTemplatePath(){
 
-		String[] stringArray = this.template_path.split("|");
+		String[] stringArray = this.template_path.split("\\|");
+
 		if(stringArray[0] != null && stringArray[0].equals("actor"))
-				return new String("../0ad/0ad/binaries/data/mods/public/art/actors/" + this.template_path);
-		else
-			return new String("../0ad/0ad/binaries/data/mods/public/simulation/templates/" + this.template_path);
+			return new String("../0ad/0ad/binaries/data/mods/public/art/actors/" + stringArray[1]);
+		else{
+			return new String("../0ad/0ad/binaries/data/mods/public/simulation/templates/" + this.template_path + ".xml");
+		}
 
 	}
 }
