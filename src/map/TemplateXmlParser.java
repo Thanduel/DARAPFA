@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 public class TemplateXmlParser  {
 	
+	private Entity templateParentEntity;
 	private String absoluteTemplatePath;
 	private boolean isCircular;
 	private boolean isSquare;
@@ -18,14 +19,17 @@ public class TemplateXmlParser  {
 	private float radius;
 	private float length;
 	private float width;
+	private float orientation;
 	private float obs_radius;
 	private float obs_length;
 	private float obs_width;
+	private float obs_orientation;
 	private Point2D.Float location;
 	private MapXmlParser templateXmlParser;
 	
 	TemplateXmlParser(Entity entity)
 	{
+		templateParentEntity = entity;
 		absoluteTemplatePath = entity.getPathFromTemplatePath();
 		templateXmlParser = new MapXmlParser(absoluteTemplatePath);
 		System.out.println(absoluteTemplatePath);
@@ -65,6 +69,7 @@ public class TemplateXmlParser  {
 	}
 
 	private void parseEdgeObstruction(NodeList obstructionChildren){
+		isSquare = true;
 		NodeList obstructionsChildren = obstructionChildren.item(1).getChildNodes();
 		obs_length = templateXmlParser.getFloatAttribute("width", (Element)obstructionsChildren.item(1));
 		obs_width = templateXmlParser.getFloatAttribute("depth", (Element)obstructionsChildren.item(1));
@@ -119,7 +124,11 @@ public class TemplateXmlParser  {
 	}
 	
 	public Point2D.Float getObstructionLocation(){
-		return location;
+		return new Point2D.Float(templateParentEntity.getX(), templateParentEntity.getY());
+	}
+
+	public Float getObstructionOrientation(){
+		return templateParentEntity.getTheta();
 	}
 	
 	public String getTemplatePath()	{

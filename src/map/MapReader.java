@@ -18,9 +18,11 @@ public class MapReader {
 	private int yIndex;
 	private int counter;
 	private int maxNumCorners;
+	private String pmpPath;
 	
 	MapReader(String pmpPath, String xmlPath)
 	{
+		this.pmpPath = pmpPath;
 		xIndex = 0;
 		yIndex = 0;
 		counter = 0;
@@ -62,6 +64,10 @@ public class MapReader {
 			System.out.println("I don't actually care about this exception" + e);
 			return -1;
 		}
+	}
+	
+	public String getPmpPath(){
+		return pmpPath;
 	}
 	
 	private short readShort(){
