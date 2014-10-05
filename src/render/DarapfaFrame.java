@@ -1,6 +1,7 @@
 package render;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,12 +12,15 @@ import javax.swing.Timer;
 
 import map.CircleObstruction;
 import map.SquareObstruction;
+import map.Map;
+import map.MapReader;
 
 public class DarapfaFrame extends JFrame implements KeyListener, ActionListener {
 	public static int RENDER_DELAY = 20; // ± 1000/60 -> 60 frames a second
 
 	private Camera cam;
-	private MapStub map;
+	private Map map;
+	//private MapStub map;
 	private HashSet<Integer> keysDown;
 
 	public DarapfaFrame()	{
@@ -25,13 +29,16 @@ public class DarapfaFrame extends JFrame implements KeyListener, ActionListener 
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		map = MapStub.generateRandomMap(40, 40, 100, 30);
-		cam = new Camera(0, 0, 0, 30, 20);
+		//map = Map.generateRandomMap(40, 40, 100, 30);
+		MapReader rawr = new MapReader("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Arcadia 02.pmp", "placeholder");
+		//MapReader rawr = new MapReader("C:/Users/FNB/git/0ad/0ad/binaries/data/mods/public/maps/scenarios/Battle for the Tiber.pmp", "placeholder");
+		map = new Map(rawr);
+		cam = new Camera(0, 0, 0, 30000, 20);
 		keysDown = new HashSet<Integer>();
 
-		map.addObstruction(new SquareObstruction(20, 20, 50, 50, (float)Math.toRadians(50)));
-		map.addObstruction(new SquareObstruction(100, 200, 50, 50, (float)Math.toRadians(20)));
-		map.addObstruction(new CircleObstruction(200, 200, 50));
+		//map.addObstruction(new SquareObstruction(20, 20, 50, 50, (float)Math.toRadians(50)));
+		//map.addObstruction(new SquareObstruction(100, 200, 50, 50, (float)Math.toRadians(20)));
+		//map.addObstruction(new CircleObstruction(200, 200, 50));
 
 		getContentPane().add(new MapCanvas(map, cam));
 

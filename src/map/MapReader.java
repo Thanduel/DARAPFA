@@ -20,7 +20,7 @@ public class MapReader {
 	private int maxNumCorners;
 	private String pmpPath;
 	
-	MapReader(String pmpPath, String xmlPath)
+	public MapReader(String pmpPath, String xmlPath)
 	{
 		this.pmpPath = pmpPath;
 		xIndex = 0;
@@ -102,7 +102,7 @@ public class MapReader {
 		int oldIndex = xIndex;
 		xIndex++;
 
-		if(xIndex == (mapSize * 16) + 1)
+		if(xIndex == ((mapSize * 16) + 1))
 			xIndex = 0;
 
 		return oldIndex; 
@@ -122,6 +122,10 @@ public class MapReader {
 		moveFilePointerToStartofMapSize();
 		mapSize = readInt();
 		System.out.println(mapSize);
+	}
+	
+	public int getMapSize(){
+		return mapSize;
 	}
 	
 	public MapTileCorner getNextMapTileCorner(){

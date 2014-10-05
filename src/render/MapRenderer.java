@@ -15,15 +15,17 @@ import java.awt.image.WritableRaster;
 import java.util.List;
 
 import map.Obstruction;
+import map.Map;
 
 // QUESTION: Should the maxHeight change with the camera height?
 // ANSWER: Not sure, but the camera should definitely hold the maxHeight
 public class MapRenderer implements Paint {
-	/* The map is used to determine the tile corners, the heights of which
-	 * are used to render the landscape. The map also stores the base value
+	/* The mapStub is used to determine the tile corners, the heights of which
+	 * are used to render the landscape. The mapStub also stores the base value
 	 * for the tile width, prior to any scaling from camera height.
 	 */
-	private MapStub map;
+	//private MapStub mapStub;
+	private Map map;
 	
 	/* The camera holds a position (of its center) and a height from the
 	 * landscape. This height is used to determine the maxHeight of rendering
@@ -34,7 +36,12 @@ public class MapRenderer implements Paint {
 	 */
 	private Camera camera;
 	
-	public MapRenderer(MapStub map, Camera camera)	{
+	//public MapRenderer(MapStub map, Camera camera)	{
+		//this.mapStub = map;
+		//this.camera = camera;
+	//}
+
+	public MapRenderer(Map map, Camera camera)	{
 		this.map = map;
 		this.camera = camera;
 	}
@@ -65,7 +72,7 @@ public class MapRenderer implements Paint {
 			return Math.min(Math.max(interpolatedHeight, 0), camera.maxRenderHeight);
 		}
 		
-		private float bilinearInterpolateHeight(MapStub.HeightQuad heights, float fractionX, float fractionY){
+		private float bilinearInterpolateHeight(Map.HeightQuad heights, float fractionX, float fractionY){
 			float interpolationX1 = interpolateHeight(heights.topLeft, heights.topRight, fractionX);
 			float interpolationX2 = interpolateHeight(heights.bottomLeft, heights.bottomRight, fractionX);
 			return interpolateHeight(interpolationX1, interpolationX2, fractionY);
@@ -89,6 +96,7 @@ public class MapRenderer implements Paint {
 		 */
 		@Override
 		public Raster getRaster(int startX, int startY, int tileWidth, int tileHeight)	{
+			//List<Obstruction> potentialObstructions = mapStub.getPotentialObstructions(startX + camera.position.x, startY + camera.position.y, tileWidth, tileHeight);
 			List<Obstruction> potentialObstructions = map.getPotentialObstructions(startX + camera.position.x, startY + camera.position.y, tileWidth, tileHeight);
 			WritableRaster raster = getColorModel().createCompatibleWritableRaster(tileWidth, tileHeight);
 			int [] pixelData = new int[tileWidth * tileHeight * 4];
@@ -109,11 +117,12 @@ public class MapRenderer implements Paint {
 						}
 					
 					if(ob == null)	{
-						MapStub.HeightQuad heights = map.getHeightsForPoint(posX, posY);
+						//MapStub.HeightQuad heights = mapStub.getHeightsForPoint(posX, posY);
+						Map.HeightQuad heights = map.getHeightsForPoint(posX, posY);
 						if(heights != null)	{
 							// we need to find fractionX and fractionY
-							float fractionX = ((posX) % map.tileWidth)/map.tileWidth,
-								  fractionY = ((posY) % map.tileWidth)/map.tileWidth;
+							float fractionX = ((posX) % map.TILEWIDTH)/map.TILEWIDTH,
+								  fractionY = ((posY) % map.TILEWIDTH)/map.TILEWIDTH;
 							
 							// if the fractions fit in the ranges, interpolate for color
 							// otherwise the pixel is completely transparent

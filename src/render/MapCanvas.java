@@ -6,12 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import javax.swing.JLabel;
+import map.Map;
 
 public class MapCanvas extends JLabel {
-	public MapStub map;
+	public Map map;
+	//public MapStub map;
 	public Camera camera;
 	
-	public MapCanvas(MapStub map, Camera camera)	{
+	public MapCanvas(Map map, Camera camera)	{
 		super();
 		
 		this.map = map;
