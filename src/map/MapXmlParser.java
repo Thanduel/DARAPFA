@@ -53,10 +53,13 @@ public class MapXmlParser {
 	
 	public NodeList getElementList(String tag){
 		Element docEle = dom.getDocumentElement();
-
 		//get a nodelist of <employee> elements
 		//docEle.
 		return docEle.getElementsByTagName(tag);
+	}
+	
+	public Element getRootElement(){
+		return dom.getDocumentElement();
 	}
 
 	public NodeList extractElementList(String elementTag){
@@ -71,6 +74,10 @@ public class MapXmlParser {
 		textVal = ele.getAttribute(attributeName);
 		System.out.println(textVal);
 		return Float.parseFloat(textVal);
+	}
+
+	public String getTextAttribute(String attributeName, Element ele){
+		return ele.getAttribute(attributeName);
 	}
 	
 	public NodeList getTagInElement(Element element, String tagName){

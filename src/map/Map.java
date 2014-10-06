@@ -62,9 +62,9 @@ public class Map {
 	
 	private Obstruction createObstructionFromTemplate(TemplateXmlParser template){
 		if(template.isCircular())
-			return new CircleObstruction((float)template.getObstructionLocation().getX(), (float)template.getObstructionLocation().getY(), template.getObstructionRadius());
+			return new CircleObstruction((float)template.getObstructionLocation().getY(), (float)template.getObstructionLocation().getX(), template.getObstructionRadius());
 		else if(template.isSquare())
-			return new SquareObstruction((float)template.getObstructionLocation().getX(), (float)template.getObstructionLocation().getY(), template.getObstructionLength(), template.getObstructionWidth(), template.getObstructionOrientation());
+			return new SquareObstruction((float)template.getObstructionLocation().getY(), (float)template.getObstructionLocation().getX(), template.getObstructionLength(), template.getObstructionWidth(), template.getObstructionOrientation());
 		else
 			return null;
 			

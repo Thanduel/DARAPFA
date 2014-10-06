@@ -34,6 +34,8 @@ public class TemplateXmlParser  {
 		templateXmlParser = new MapXmlParser(absoluteTemplatePath);
 		System.out.println(absoluteTemplatePath);
 		NodeList entity_list = templateXmlParser.extractElementList("*");
+		boolean templateContainsObstruction = false;
+		String parent_template;
 
 		if(entity_list.item(0) == null )
 			return;
@@ -42,11 +44,49 @@ public class TemplateXmlParser  {
 		{
 			if(entity_list.item(i).getNodeName().equals("Footprint"))
 				parseFootprint((Element)entity_list.item(i));
-			if(entity_list.item(i).getNodeName().equals("Obstruction"))
+			if(entity_list.item(i).getNodeName().equals("Obstruction")){
+				templateContainsObstruction = true;
 				parseObstruction((Element)entity_list.item(i));
+			}
+		}
+		if(!templateContainsObstruction){
+			String template = templateXmlParser.getRootElement().getAttribute("parent");
+			String parent_template_path = new String("../0ad/0ad/binaries/data/mods/public/simulation/templates/" + template + ".xml");
+			if(template.length() == 0)
+				return;
+			MapXmlParser parent_templateXmlParser = new MapXmlParser(parent_template_path);
+
+			while(!parseTemplateParentForObstructions(parent_templateXmlParser))
+			{
+				template = parent_templateXmlParser.getRootElement().getAttribute("parent");
+				parent_template_path = new String("../0ad/0ad/binaries/data/mods/public/simulation/templates/" + template + ".xml");
+				if(template.length() == 0)
+					return;
+				parent_templateXmlParser = new MapXmlParser(parent_template_path);
+			}
 		}
 	}
 	
+	private boolean parseTemplateParentForObstructions(MapXmlParser parent_template)
+	{
+		NodeList parent_entity_list = parent_template.getRootElement().getChildNodes();
+		//NodeList parent_entity_list = parent_templateXmlParser.extractElementList("*");
+
+		if(parent_entity_list.item(0) == null )
+			return false;
+
+		for(int i = 0; i < parent_entity_list.getLength(); i++)
+		{
+			if(parent_entity_list.item(i).getNodeName().equals("Footprint"))
+				parseFootprint((Element)parent_entity_list.item(i));
+			if(parent_entity_list.item(i).getNodeName().equals("Obstruction")){
+				parseObstruction((Element)parent_entity_list.item(i));
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	private void parseObstruction(Element footprint){
 		isObstruction = true;
 		NodeList footprint_children = footprint.getChildNodes();
@@ -60,6 +100,7 @@ public class TemplateXmlParser  {
 	}
 	
 	private void parseUnitObstruction(NodeList obstructionChildren){
+		isCircular = true;
 		obs_radius = templateXmlParser.getFloatAttribute("radius", (Element)obstructionChildren.item(1));
 	}
 
